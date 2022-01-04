@@ -4,7 +4,9 @@ const getTrivia = async( req, res ) => {
     const { level } = req.params;
 
     const trivias = await Trivia.find({ level });
-    res.status(200).json( trivias );    
+    const triviaToReturn = trivias[Math.floor(Math.random()*5)]
+
+    res.status(200).json( triviaToReturn );    
 }
 
 module.exports = {
