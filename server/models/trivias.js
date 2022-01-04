@@ -12,6 +12,10 @@ const TriviaSchema = new Schema({
     correctAnswer:{
         type: Number,
         required: true
+    },
+    level: {
+        type: Number,
+        required: true
     }
 })
 
