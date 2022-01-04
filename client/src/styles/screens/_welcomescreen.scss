@@ -1,0 +1,75 @@
+.welcomescreen{
+
+    height: 100vh;
+    @include vertical-center;
+
+    &__banner{
+        background-color: purple;
+        border: 5px dotted white;  
+        border-radius: 2rem; 
+        margin-top: -8rem;
+        margin-bottom: 3rem;
+        padding: 2rem 7rem;
+        text-align: center;
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__title{
+        color: white;
+        font-size: 7rem;
+    }
+
+    &__subtitle{
+        color: yellow;
+        font-size: 3rem;
+    }
+
+    &__input-div{
+        border: 1px solid purple;
+        border-radius: 2rem;
+        overflow: hidden;
+        width: 25rem;
+    }
+
+    &__input{
+        background-color: white;
+        border: none;
+        font-size: 1.5rem;
+        padding: 1.5rem;
+        text-align: center;
+        width: 100%;
+
+        &:focus{
+            outline: none;
+        }
+    }
+
+    &__button-div{
+        border: 1px solid purple;
+        border-radius: 2rem;
+        margin-top: 2rem;
+        overflow: hidden;
+        text-align: center;
+        width: 15rem;
+    }
+
+    &__button{
+        background-color: yellow;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 1rem 0;
+        transition: all .2s;
+        width: 100%;
+
+        &:hover{
+            background-color: darken(yellow, $amount: 10);
+        }
+    }
+
+}
