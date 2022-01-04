@@ -1,8 +1,9 @@
-import GameScreen from "./screens/GameScreen";
+import AppRouter from "./router/AppRouter";
+
 
 const App = () => {
   return(
-    <GameScreen />
+    <AppRouter />
   )
 }
 
