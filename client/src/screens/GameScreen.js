@@ -1,7 +1,17 @@
 const GameScreen = () => {
     return (
         <div className="gamescreen">
-            <h1>Hola mundo</h1>
+            <div></div>
+            <div></div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
     )
 }
