@@ -1,7 +1,5 @@
 .gamescreen{
     height: 100vh;
-    background-image: url('../../assets/show-background.jpg');
-    background-size: 100% 100vh;
 
     @include vertical-center;
 
