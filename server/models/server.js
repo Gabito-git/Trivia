@@ -7,10 +7,15 @@ class Server{
         this.app = express();
         this.port = process.env.PORT || 4000;
         this.dbConn();
+        this.middlewares();
     }
 
     dbConn(){
         dbConnection()
+    }
+
+    middlewares(){
+        this.app.use( express.json() );
     }
 
     execute(){
