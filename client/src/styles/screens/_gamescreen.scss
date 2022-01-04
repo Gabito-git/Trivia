@@ -1,0 +1,82 @@
+.gamescreen{
+    height: 100vh;
+    background-image: url('../../assets/show-background.jpg');
+    background-size: 100% 100vh;
+
+    @include vertical-center;
+
+    &__presenter-talk{
+        background-color: white;
+        border-radius: 2rem;
+        font-size: 1.6rem;
+        font-weight: 700;
+        height: 8rem;
+        margin-top: -15rem;
+        position: relative;
+        width: 22rem;
+
+        @include vertical-center;
+
+        @media all and (min-width: 767px){
+            margin: 0 10rem 9rem 0;
+            height: 12rem;
+            
+            width: 27rem;
+        }
+    }
+
+    &__question, &__answer{
+        background-color: black;
+        border: 3px solid white;
+        border-radius: 4rem;
+        color: white;
+        padding: 1.5rem 2rem;
+        
+    }
+
+    &__question{
+        font-size: 1.6rem;
+        text-align: center;
+        margin: 2rem 0;
+        width: 80%;
+        @media all and (min-width: 1023px){
+            width: 60%;
+        }
+    }
+
+    &__answers{
+        width: 60%;
+        font-size: 1.8rem;
+
+        @media all and (min-width: 1023px){
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+    }
+
+    &__answer{
+        cursor: pointer;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        @media all and (min-width: 1023px){
+            flex: 1;
+        }
+    }
+
+    &__presenter{
+        display: none;
+        position: absolute;
+        @media all and (min-width: 767px){
+            display: block;
+            top:-10rem;
+            left: 100%;
+            height: 30rem;
+
+            img{
+                max-height: 100%;
+            }
+        }
+    }
+
+}
