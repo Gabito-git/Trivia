@@ -279,3 +279,5 @@ const trivias = [
         level:5
     },
 ]
+
+module.exports = trivias;
