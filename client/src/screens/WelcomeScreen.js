@@ -3,7 +3,7 @@ const WelcomeScreen = () => {
         <div className="welcomescreen">
             <div className="welcomescreen__banner">
                 <h1 className="welcomescreen__title">Trivia</h1>
-                <span className="welcomescreen__sutitle">Millonaria</span>
+                <span className="welcomescreen__subtitle">Millonaria</span>
             </div>
             <form>
                 <div className="welcomescreen__input-div">
