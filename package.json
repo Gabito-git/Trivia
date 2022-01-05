@@ -8,7 +8,9 @@
     "start": "node server/index.js",
     "server": "nodemon server/index.js",
     "data:import": "node server/seeder.js",
-    "data:destroy": "node server/seeder.js -d"
+    "data:destroy": "node server/seeder.js -d",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Luis Arevalo",
   "license": "ISC",
