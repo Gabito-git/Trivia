@@ -28,6 +28,7 @@ const GameScreen = () => {
     const [presenterStatus, setPresenterStatus] = useState(initPresenter)
 
     const presenterElement = useRef(null);
+    const questionElement  = useRef(null);
 
     useEffect(() => {
         const getTrivia = async() => {
@@ -60,7 +61,7 @@ const GameScreen = () => {
             startDelay: 300,
             typeSpeed: 60,
             backSpeed: 40,
-            backDelay: 100,
+            backDelay: 500,
             showCursor: false,
             onComplete: (self) => { setPresenterStatus({
                 ...presenterStatus,
@@ -73,6 +74,20 @@ const GameScreen = () => {
           };
     }, [ gameStatus ])
 
+    useEffect(() => {
+
+        if(presenterStatus.finishWelcome){
+            const typed = new Typed( questionElement.current,{
+                strings: [ `${ trivia.question }` ],
+                startDelay: 700,
+                typeSpeed: 60,
+                backSpeed: 40,
+                backDelay: 100,
+                showCursor: false,
+            } )
+        }
+        
+    }, [presenterStatus])
 
     return (
         <div className="gamescreen">
@@ -83,7 +98,7 @@ const GameScreen = () => {
                 </div>
             </div>
             <div className="gamescreen__question">
-                <p>{ trivia.question }</p>
+                <p ref={ questionElement }></p>
             </div>
             <div className="gamescreen__answers">
                 <div className="gamescreen__answer">
