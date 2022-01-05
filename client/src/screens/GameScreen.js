@@ -96,6 +96,7 @@ const GameScreen = () => {
         
     }, [presenterStatus])
 
+
     return (
         <div className="gamescreen">
             <div className="gamescreen__presenter-talk">
@@ -106,6 +107,11 @@ const GameScreen = () => {
             </div>
             <div className="gamescreen__question">
                 <p ref={ questionElement }></p>
+                <div className='gamescreen__confirm'>
+                    <h4>Estas seguro?</h4>
+                    <button className='gamescreen__button gamescreen__button-si'>Si</button>
+                    <button className= 'gamescreen__button gamescreen__button-no'>No</button>
+                </div>
             </div>
             <div className="gamescreen__answers">
                 <div className="gamescreen__answer">
