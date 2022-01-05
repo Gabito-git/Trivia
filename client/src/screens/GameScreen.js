@@ -16,12 +16,18 @@ const initGame ={
     level: 1,
 }
 
+const initPresenter ={
+    finishWelcome: false,
+    talkYouSure: false,
+}
+
 const GameScreen = () => {
 
     const [trivia, setTrivia] = useState( initTrivia );
     const [gameStatus, setGameStatus] = useState( initGame );
+    const [presenterStatus, setPresenterStatus] = useState(initPresenter)
 
-    const el = useRef(null);
+    const presenterElement = useRef(null);
 
     useEffect(() => {
         const getTrivia = async() => {
@@ -49,22 +55,29 @@ const GameScreen = () => {
     }, [ gameStatus ])
 
     useEffect(() => {
-        const typed = new Typed(el.current, {
+        const typed = new Typed(presenterElement.current, {
             strings: gameStatus.level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
             startDelay: 300,
             typeSpeed: 60,
             backSpeed: 40,
             backDelay: 100,
             showCursor: false,
-            onComplete: (self) => { console.log('terminé') },
+            onComplete: (self) => { setPresenterStatus({
+                ...presenterStatus,
+                finishWelcome: true
+            }) },
           });
+
+          return () => {
+            typed.destroy();
+          };
     }, [ gameStatus ])
 
 
     return (
         <div className="gamescreen">
             <div className="gamescreen__presenter-talk">
-                <p ref={el}></p>
+                <p ref={presenterElement}></p>
                 <div className="gamescreen__presenter">
                     <img src={ presenter } alt=""/>
                 </div>
