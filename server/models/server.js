@@ -1,6 +1,8 @@
 const express = require('express');
-const dbConnection = require('../db/config');
 require('dotenv').config();
+const cors = require('cors');
+
+const dbConnection = require('../db/config');
 
 class Server{
     constructor(){
@@ -20,6 +22,7 @@ class Server{
     }
 
     middlewares(){
+        this.app.use(cors());
         this.app.use( express.json() );
     }
 
