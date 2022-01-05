@@ -1,24 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
+import Typed from "typed.js";
 
 import presenter from '../assets/presenter.png';
 
-const initState = {
+const initTrivia = {
     question: '',
     answers:[],
     correctAnswer: null,
     level: 1
 }
 
+const initGame ={
+    score: 0, 
+    level: 1,
+}
+
 const GameScreen = () => {
 
-    const [trivia, setTrivia] = useState( initState );
-    const [gameLevel, setGameLevel] = useState(1);
+    const [trivia, setTrivia] = useState( initTrivia );
+    const [gameStatus, setGameStatus] = useState( initGame );
+
+    const el = useRef(null);
 
     useEffect(() => {
         const getTrivia = async() => {
             const response = await fetch(
-                `http://localhost:4000/api/trivias/${ gameLevel }`,
+                `http://localhost:4000/api/trivias/${ gameStatus.level }`,
                 {
                     method: 'get',
                     headers:{
@@ -38,13 +46,25 @@ const GameScreen = () => {
         }
 
         getTrivia()
-    }, [ gameLevel ])
+    }, [ gameStatus ])
+
+    useEffect(() => {
+        const typed = new Typed(el.current, {
+            strings: gameStatus.level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
+            startDelay: 300,
+            typeSpeed: 60,
+            backSpeed: 40,
+            backDelay: 100,
+            showCursor: false,
+            onComplete: (self) => { console.log('terminé') },
+          });
+    }, [ gameStatus ])
 
 
     return (
         <div className="gamescreen">
             <div className="gamescreen__presenter-talk">
-                <p>Vamos por $ 100.000</p>
+                <p ref={el}></p>
                 <div className="gamescreen__presenter">
                     <img src={ presenter } alt=""/>
                 </div>
