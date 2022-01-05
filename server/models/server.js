@@ -7,7 +7,8 @@ class Server{
         this.app = express();
         this.port = process.env.PORT || 4000;
         this.paths = {
-            trivias: '/api/trivias'
+            trivias: '/api/trivias',
+            history: '/api/history'
         }
         this.dbConn();
         this.middlewares();
@@ -23,7 +24,8 @@ class Server{
     }
 
     routes(){
-        this.app.use( this.paths.trivias, require('../routes/trivias') )
+        this.app.use( this.paths.trivias, require('../routes/trivias') ),
+        this.app.use( this.paths.history, require('../routes/history') )
     }
 
     execute(){
