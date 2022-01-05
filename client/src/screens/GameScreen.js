@@ -15,6 +15,7 @@ const initGame ={
     score: 0, 
     level: 1,
     isQuestionOnScreen: false,
+    questionSelected: null,
 }
 
 const initPresenter ={
@@ -28,7 +29,7 @@ const GameScreen = () => {
     const [gameStatus, setGameStatus] = useState( initGame );
     const [presenterStatus, setPresenterStatus] = useState(initPresenter);
 
-    const { isQuestionOnScreen, level } = gameStatus;
+    const { isQuestionOnScreen, level, questionSelected } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -96,6 +97,12 @@ const GameScreen = () => {
         
     }, [presenterStatus])
 
+    const handleAnswerSelected = ( number) => {
+        setGameStatus({
+            ...gameStatus,
+            questionSelected: number
+        })
+    }
 
     return (
         <div className="gamescreen">
@@ -105,28 +112,69 @@ const GameScreen = () => {
                     <img src={ presenter } alt=""/>
                 </div>
             </div>
+
             <div className="gamescreen__question">
                 <p ref={ questionElement }></p>
-                <div className='gamescreen__confirm'>
-                    <h4>Estas seguro?</h4>
-                    <button className='gamescreen__button gamescreen__button-si'>Si</button>
-                    <button className= 'gamescreen__button gamescreen__button-no'>No</button>
-                </div>
+                {
+                    questionSelected !== null && (
+                        <div className='gamescreen__confirm animate__animated animate__fadeInUp'>
+                            <h4>Estas seguro?</h4>
+                            <button className='gamescreen__button gamescreen__button-si'>Si</button>
+                            <button className= 'gamescreen__button gamescreen__button-no'>No</button>
+                        </div>
+                    )
+                }
+                
             </div>
+
             <div className="gamescreen__answers">
-                <div className="gamescreen__answer">
+                <div 
+                    style={
+                        { backgroundColor: questionSelected === 0 
+                            ? 'purple'
+                            : 'black'}
+                    }
+                    className="gamescreen__answer"
+                    onClick={() =>handleAnswerSelected(0)}
+                >
                     { isQuestionOnScreen && <p>A. { trivia.answers[0] }</p>}
                 </div>
-                <div className="gamescreen__answer">
+
+                <div 
+                    style={
+                        { backgroundColor: questionSelected === 1 
+                            ? 'purple'
+                            : 'black'}
+                    }
+                    className="gamescreen__answer"
+                    onClick={() =>handleAnswerSelected(1)}
+                >
                 { isQuestionOnScreen && <p>B. { trivia.answers[1] }</p>}
                 </div>
             </div>
 
             <div className="gamescreen__answers">
-                <div className="gamescreen__answer">
+                <div 
+                    style={
+                        { backgroundColor: questionSelected === 2
+                            ? 'purple'
+                            : 'black'}
+                    }
+                    className="gamescreen__answer"
+                    onClick={() =>handleAnswerSelected(2)}
+                >
                 { isQuestionOnScreen && <p>C. { trivia.answers[2] }</p>}
                 </div>
-                <div className="gamescreen__answer">
+
+                <div 
+                    style={
+                        { backgroundColor: questionSelected === 3 
+                            ? 'purple'
+                            : 'black'}
+                    }
+                    className="gamescreen__answer"
+                    onClick={() =>handleAnswerSelected(3)}
+                >
                 { isQuestionOnScreen && <p>D. { trivia.answers[3] }</p>}
                 </div>
             </div>
