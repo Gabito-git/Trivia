@@ -23,13 +23,15 @@ const initPresenter ={
     talkYouSure: false,
 }
 
+let presTyped;
+
 const GameScreen = () => {
 
     const [trivia, setTrivia] = useState( initTrivia );
     const [gameStatus, setGameStatus] = useState( initGame );
     const [presenterStatus, setPresenterStatus] = useState(initPresenter);
 
-    const { isQuestionOnScreen, level, questionSelected } = gameStatus;
+    const { isQuestionOnScreen, level, questionSelected, score } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -60,7 +62,7 @@ const GameScreen = () => {
     }, [ level ])
 
     useEffect(() => {
-        const typed = new Typed(presenterElement.current, {
+        presTyped = new Typed(presenterElement.current, {
             strings: level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
             startDelay: 300,
             typeSpeed: 60,
@@ -73,9 +75,6 @@ const GameScreen = () => {
             }) },
           });
 
-          return () => {
-            typed.destroy();
-          };
     }, [ level ])
 
     useEffect(() => {
@@ -104,8 +103,25 @@ const GameScreen = () => {
         })
     }
 
+    const handleYesClick = () => {
+        if( questionSelected === trivia.correctAnswer ){
+            presTyped.destroy()
+            presTyped = new Typed( presenterElement.current, {
+                strings: ['..................','Felicitaciones'],
+                startDelay: 700,
+                typeSpeed: 60,
+                backSpeed: 40,
+                backDelay: 100,
+                showCursor: false,
+            })
+        }
+    }
+
     return (
         <div className="gamescreen">
+
+            <div className="gamescreen__score">$ { score }</div>
+
             <div className="gamescreen__presenter-talk">
                 <p ref={presenterElement}></p>
                 <div className="gamescreen__presenter">
@@ -119,7 +135,10 @@ const GameScreen = () => {
                     questionSelected !== null && (
                         <div className='gamescreen__confirm animate__animated animate__fadeInUp'>
                             <h4>Estas seguro?</h4>
-                            <button className='gamescreen__button gamescreen__button-si'>Si</button>
+                            <button 
+                                className='gamescreen__button gamescreen__button-si'
+                                onClick={ handleYesClick }
+                            >Si</button>
                             <button className= 'gamescreen__button gamescreen__button-no'>No</button>
                         </div>
                     )
