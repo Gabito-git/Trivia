@@ -1,7 +1,17 @@
 .gamescreen{
     height: 100vh;
+    position: relative;
 
     @include vertical-center;
+
+    &__score{
+        position: absolute;
+        top:95%;
+        left: 2%;
+
+        color: yellow;
+        font-size: 2.5rem;
+    }
 
     &__presenter-talk{
         background-color: white;
