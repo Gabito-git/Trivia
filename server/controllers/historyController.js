@@ -12,6 +12,13 @@ const addUserToHistory = async(req, res) => {
     res.status(201).json( newUser );
 }
 
+const getHistory = async(req, res) => {
+    const history = await User.find();
+
+    res.status(200).json(history)
+}
+
 module.exports ={
-    addUserToHistory
+    addUserToHistory,
+    getHistory
 }
