@@ -16,6 +16,7 @@ const initGame ={
     level: 1,
     isQuestionOnScreen: false,
     questionSelected: null,
+    winner: null
 }
 
 const initPresenter ={
@@ -24,6 +25,7 @@ const initPresenter ={
 }
 
 let presTyped;
+let qTyped;
 
 const GameScreen = () => {
 
@@ -31,7 +33,7 @@ const GameScreen = () => {
     const [gameStatus, setGameStatus] = useState( initGame );
     const [presenterStatus, setPresenterStatus] = useState(initPresenter);
 
-    const { isQuestionOnScreen, level, questionSelected, score } = gameStatus;
+    const { isQuestionOnScreen, level, questionSelected, score, winner } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -69,10 +71,12 @@ const GameScreen = () => {
             backSpeed: 40,
             backDelay: 500,
             showCursor: false,
-            onComplete: (self) => { setPresenterStatus({
-                ...presenterStatus,
-                finishWelcome: true
-            }) },
+            onComplete: () => { 
+                setPresenterStatus( p => ({
+                    ...p,
+                    finishWelcome: true
+                }) )
+             }
           });
 
     }, [ level ])
@@ -80,27 +84,31 @@ const GameScreen = () => {
     useEffect(() => {
 
         if(presenterStatus.finishWelcome){
-            const typed = new Typed( questionElement.current,{
+            qTyped = new Typed( questionElement.current,{
                 strings: [ `${ trivia.question }` ],
                 startDelay: 700,
                 typeSpeed: 60,
                 backSpeed: 40,
                 backDelay: 100,
                 showCursor: false,
-                onComplete: (self) => { setGameStatus({
-                    ...gameStatus,
-                    isQuestionOnScreen: true
-                }) },
+                onComplete: () => {
+                    setGameStatus( g => ({
+                        ...g,
+                        isQuestionOnScreen: true
+                    }))
+                }
             } )
         }
         
     }, [presenterStatus])
 
     const handleAnswerSelected = ( number) => {
-        setGameStatus({
-            ...gameStatus,
-            questionSelected: number
-        })
+        if(isQuestionOnScreen){
+            setGameStatus({
+                ...gameStatus,
+                questionSelected: number
+            })
+        }
     }
 
     const handleYesClick = () => {
@@ -113,6 +121,12 @@ const GameScreen = () => {
                 backSpeed: 40,
                 backDelay: 100,
                 showCursor: false,
+                onComplete: () => { setGameStatus({
+                    ...gameStatus,
+                    winner: trivia.correctAnswer,
+                    score: '100.000',
+                    questionSelected: null
+                }) }
             })
         }
     }
@@ -153,7 +167,7 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className="gamescreen__answer"
+                    className={`gamescreen__answer animate__animated ${ winner === 0? 'animate__zoomIn': ''}` }
                     onClick={() =>handleAnswerSelected(0)}
                 >
                     { isQuestionOnScreen && <p>A. { trivia.answers[0] }</p>}
@@ -165,7 +179,7 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className="gamescreen__answer"
+                    className={`gamescreen__answer animate__animated ${ winner === 1? 'animate__zoomIn': ''}` }
                     onClick={() =>handleAnswerSelected(1)}
                 >
                 { isQuestionOnScreen && <p>B. { trivia.answers[1] }</p>}
@@ -179,7 +193,7 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className="gamescreen__answer"
+                    className={`gamescreen__answer animate__animated ${ winner === 2? 'animate__zoomIn': ''}` }
                     onClick={() =>handleAnswerSelected(2)}
                 >
                 { isQuestionOnScreen && <p>C. { trivia.answers[2] }</p>}
@@ -191,7 +205,7 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className="gamescreen__answer"
+                    className={`gamescreen__answer animate__animated ${ winner === 3? 'animate__zoomIn': ''}` }
                     onClick={() =>handleAnswerSelected(3)}
                 >
                 { isQuestionOnScreen && <p>D. { trivia.answers[3] }</p>}
