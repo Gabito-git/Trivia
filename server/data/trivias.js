@@ -48,7 +48,7 @@ const trivias = [
         answers:[
             "100 km/s",
             "150 mil km/s",
-            "300 km/s",
+            "300 mil km/s",
             "La luz no viaja"
         ],
         correctAnswer:2,
