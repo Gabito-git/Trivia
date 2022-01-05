@@ -20,8 +20,7 @@ const initGame ={
 }
 
 const initPresenter ={
-    finishWelcome: false,
-    talkYouSure: false,
+    finishSpeak: false,
 }
 
 let presTyped;
@@ -33,7 +32,14 @@ const GameScreen = () => {
     const [gameStatus, setGameStatus] = useState( initGame );
     const [presenterStatus, setPresenterStatus] = useState(initPresenter);
 
-    const { isQuestionOnScreen, level, questionSelected, score, winner } = gameStatus;
+    const { finishSpeak } = presenterStatus;
+
+    const { 
+        isQuestionOnScreen, 
+        level, 
+        questionSelected, 
+        score, 
+        winner } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -74,7 +80,7 @@ const GameScreen = () => {
             onComplete: () => { 
                 setPresenterStatus( p => ({
                     ...p,
-                    finishWelcome: true
+                    finishSpeak: true
                 }) )
              }
           });
@@ -83,7 +89,7 @@ const GameScreen = () => {
 
     useEffect(() => {
 
-        if(presenterStatus.finishWelcome){
+        if(finishSpeak){
             qTyped = new Typed( questionElement.current,{
                 strings: [ `${ trivia.question }` ],
                 startDelay: 700,
@@ -100,7 +106,7 @@ const GameScreen = () => {
             } )
         }
         
-    }, [presenterStatus])
+    }, [finishSpeak])
 
     const handleAnswerSelected = ( number) => {
         if(isQuestionOnScreen){
