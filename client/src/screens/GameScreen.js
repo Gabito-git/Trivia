@@ -87,6 +87,10 @@ const GameScreen = () => {
                 backSpeed: 40,
                 backDelay: 100,
                 showCursor: false,
+                onComplete: (self) => { setGameStatus({
+                    ...gameStatus,
+                    isQuestionOnScreen: true
+                }) },
             } )
         }
         
