@@ -14,6 +14,7 @@ const initTrivia = {
 const initGame ={
     score: 0, 
     level: 1,
+    isQuestionOnScreen: false,
 }
 
 const initPresenter ={
@@ -25,7 +26,9 @@ const GameScreen = () => {
 
     const [trivia, setTrivia] = useState( initTrivia );
     const [gameStatus, setGameStatus] = useState( initGame );
-    const [presenterStatus, setPresenterStatus] = useState(initPresenter)
+    const [presenterStatus, setPresenterStatus] = useState(initPresenter);
+
+    const { isQuestionOnScreen, level } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -33,7 +36,7 @@ const GameScreen = () => {
     useEffect(() => {
         const getTrivia = async() => {
             const response = await fetch(
-                `http://localhost:4000/api/trivias/${ gameStatus.level }`,
+                `http://localhost:4000/api/trivias/${ level }`,
                 {
                     method: 'get',
                     headers:{
@@ -53,11 +56,11 @@ const GameScreen = () => {
         }
 
         getTrivia()
-    }, [ gameStatus ])
+    }, [ level ])
 
     useEffect(() => {
         const typed = new Typed(presenterElement.current, {
-            strings: gameStatus.level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
+            strings: level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
             startDelay: 300,
             typeSpeed: 60,
             backSpeed: 40,
@@ -72,7 +75,7 @@ const GameScreen = () => {
           return () => {
             typed.destroy();
           };
-    }, [ gameStatus ])
+    }, [ level ])
 
     useEffect(() => {
 
@@ -102,19 +105,19 @@ const GameScreen = () => {
             </div>
             <div className="gamescreen__answers">
                 <div className="gamescreen__answer">
-                    <p>A. { trivia.answers[0] }</p>
+                    { isQuestionOnScreen && <p>A. { trivia.answers[0] }</p>}
                 </div>
                 <div className="gamescreen__answer">
-                    <p>B. { trivia.answers[1] }</p>
+                { isQuestionOnScreen && <p>B. { trivia.answers[1] }</p>}
                 </div>
             </div>
 
             <div className="gamescreen__answers">
                 <div className="gamescreen__answer">
-                    <p>C. { trivia.answers[2] }</p>
+                { isQuestionOnScreen && <p>C. { trivia.answers[2] }</p>}
                 </div>
                 <div className="gamescreen__answer">
-                    <p>D. { trivia.answers[3] }</p>
+                { isQuestionOnScreen && <p>D. { trivia.answers[3] }</p>}
                 </div>
             </div>
             
