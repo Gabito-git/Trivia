@@ -55,37 +55,6 @@
         }
     }
 
-    &__confirm{
-        color: purple;
-        position: absolute;
-        top:-8rem;
-        left: 39%;
-    }
-
-    &__button{
-        border-radius: 10px;
-        border: none;
-        color: black;
-        cursor: pointer;
-        margin-right: 1rem;
-        padding: 0.5rem 0;
-        width: 8rem;
-
-        &-si{
-            &:hover{
-                background-color: darken(green, $amount: 10);
-                color: white;
-            }
-        }
-        &-no{
-            &:hover{
-                background-color: darken(red, $amount: 10);
-                color: white;
-            }
-        }
-    }
-
-
     &__answers{
         width: 55%;
 
