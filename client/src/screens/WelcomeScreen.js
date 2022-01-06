@@ -34,7 +34,7 @@ const WelcomeScreen = () => {
         }
 
         dispatch({
-            type: 'ADD_NICKNAME',
+            type: 'SET_NICKNAME',
             payload: nickname
         })
 
