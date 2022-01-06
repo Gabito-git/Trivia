@@ -6,7 +6,7 @@ const initState = {
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case 'ADD_NICKNAME':
+        case 'SET_NICKNAME':
             return{
                 ...state,
                 nickname: action.payload
