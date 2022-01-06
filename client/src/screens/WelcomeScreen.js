@@ -49,8 +49,11 @@ const WelcomeScreen = () => {
                         history.length === 0 
                             ? <p>Se el primero</p>
                             : (
-                                history.map( ({username, score}) => (
-                                    <li>{username}  {score}</li>
+                                history.map( ({username, score, _id}) => (
+                                    <li 
+                                        key={_id}
+                                    >{`${username}  $ ${new Intl.NumberFormat("es-ES").format(score)}`}
+                                    </li>
                                 ) )
                             )
                     }

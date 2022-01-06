@@ -95,11 +95,11 @@ const useGame = () => {
                     strings: level === 5 ? yesStrings(state)[1]: yesStrings(state)[0],
                     preStringTyped: (arrayPos, self) => {
                         const scoreCalc = {
-                            1: '100.000',
-                            2: '1.000.000',
-                            3: '5.000.000',
-                            4: '25.000.000',
-                            5: '100.000.000'
+                            1: 100000,
+                            2: 1000000,
+                            3: 5000000,
+                            4: 25000000,
+                            5: 100000000
                         }
                         if(arrayPos === 0){
                             misterySound.current.play();
@@ -170,7 +170,7 @@ const useGame = () => {
                     },
                     body: JSON.stringify({
                         username: state.nickname,
-                        score: level !==5 ?`$ ${score}`: '$ 100.000.000'
+                        score: level !==5 ? score : 100000000
                     })
                 }
             )

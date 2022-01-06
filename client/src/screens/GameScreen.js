@@ -37,7 +37,7 @@ const GameScreen = () => {
     return (
         <div className="gamescreen">
 
-            <div className="gamescreen__score">$ { score }</div>
+            <div className="gamescreen__score">$ { new Intl.NumberFormat("es-ES").format(score) }</div>
 
             <div className="gamescreen__presenter-talk">
                 <p ref={hostElement}></p>
