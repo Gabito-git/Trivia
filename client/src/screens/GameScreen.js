@@ -215,7 +215,7 @@ const GameScreen = () => {
                     },
                     body: JSON.stringify({
                         username: state.nickname,
-                        score
+                        score: `$ ${score}`
                     })
                 }
             )
