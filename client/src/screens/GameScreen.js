@@ -198,6 +198,45 @@ const GameScreen = () => {
         })
     }
 
+    const handleQuit = () => {
+        presTyped.destroy();
+        const quit = async() => {
+            presTyped.destroy();
+            qTyped.destroy();
+            setPresenterStatus(initPresenter);
+            setGameStatus(initGame);
+            setTrivia(initTrivia);
+
+            await fetch(
+                'http://localhost:4000/api/history',{
+                    method: 'post',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: state.nickname,
+                        score
+                    })
+                }
+            )
+            dispatch({
+                type: 'UNSET_NICKNAME'
+            })
+        }
+
+        presTyped = new Typed(presenterElement.current,  {
+            strings: ['Has sido un concursante genial.','Hasta pronto!! ^2000'],
+            startDelay: 700,
+            typeSpeed: 60,
+            backSpeed: 40,
+            backDelay: 100,
+            showCursor: false,
+            onComplete: () => {
+                quit();
+            }
+        })
+    }
+
     return (
         <div className="gamescreen">
 
@@ -230,6 +269,7 @@ const GameScreen = () => {
                             affirmText="Continúo"
                             denyText="Me retiro"
                             onClickProceed={ handleContinue }
+                            onClickDeny={ handleQuit }
                         />
                     )
                 }
