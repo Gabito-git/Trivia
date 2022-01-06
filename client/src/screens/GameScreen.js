@@ -147,13 +147,6 @@ const GameScreen = () => {
                         })
                     }
                 },
-
-                // onComplete: () => { setGameStatus({
-                //     ...gameStatus,
-                //     winner: trivia.correctAnswer,
-                //     score: '100.000',
-                //     questionSelected: null
-                // }) }
             })
         }
     }
@@ -178,6 +171,16 @@ const GameScreen = () => {
                             title="¿Estas seguro?"
                             affirmText="Si"
                             denyText="No"
+                            onClickProceed={ handleYesClick }
+                        />
+                    )
+                }
+
+                {
+                    questionSelected !== null && winner && (
+                        <Confirm 
+                            affirmText="Continúo"
+                            denyText="Me retiro"
                             onClickProceed={ handleYesClick }
                         />
                     )
