@@ -14,6 +14,7 @@ const WelcomeScreen = () => {
             )
 
             const data = await response.json();
+            setHistory(data.history)
         }
 
         getHistory()
@@ -24,8 +25,15 @@ const WelcomeScreen = () => {
             <div className="welcomescreen__history">
                 <h2>Mejores concursantes</h2>
                 <ul>
-                    <li>Gabito $100.000.000</li>
-                    <li>Dianlo $5.000.000</li>
+                    {
+                        history.length === 0 
+                            ? <p>Se el primero</p>
+                            : (
+                                history.map( ({username, score}) => (
+                                    <li>{username}  {score}</li>
+                                ) )
+                            )
+                    }
                 </ul>
             </div>
             <div className="welcomeScreen__start">
