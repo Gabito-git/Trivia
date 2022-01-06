@@ -50,6 +50,7 @@ const GameScreen = () => {
     const questionElement  = useRef(null);
     const misterySound     = useRef(null);
     const congratsSound    = useRef(null);
+    const failSound        = useRef(null);
 
     useEffect(() => {
         const getTrivia = async() => {
@@ -133,15 +134,28 @@ const GameScreen = () => {
 
     const handleYesClick = () => {
 
-        setGameStatus({
+        level < 5 && setGameStatus({
             ...gameStatus,
             answersLocked: true
         })
 
         if( questionSelected === trivia.correctAnswer ){
+            const strings = [
+                [
+                    'Espera reviso mis datos... ^2000',
+                    'Felicitaciones!!!!',
+                    '¿Continúas o tomas tu dinero?'
+                ],
+                [
+                    'Espera reviso mis datos... ^2000',
+                    `Felicitaciones ${state.nickname}`,
+                    'Has llegado al final',
+                    'Hasta pronto ^1000'
+                ]
+            ]
             presTyped.destroy()
             presTyped = new Typed( presenterElement.current, {
-                strings: ['Espera reviso mis datos... ^2000','Felicitaciones!!!!', '¿Continúas o tomas tu dinero?'],
+                strings: level === 5 ? strings[1]: strings[0],
                 startDelay: 700,
                 typeSpeed: 60,
                 backSpeed: 40,
@@ -164,12 +178,20 @@ const GameScreen = () => {
                         setGameStatus({
                             ...gameStatus,
                             answersLocked: true,    
-                            winner: trivia.correctAnswer,
+                            winner: level !== 5? trivia.correctAnswer: null,
                             score: scoreCalc[level]
                         })
                     }
                 },
+                onComplete: () => {
+                    if (level === 5){
+                        handleQuit()
+                    }
+                }
             })
+        } else{
+            presTyped.destroy();
+            handleQuit(true);
         }
     }
 
@@ -198,16 +220,16 @@ const GameScreen = () => {
         })
     }
 
-    const handleQuit = () => {
+    const handleQuit = (mistake) => {
         presTyped.destroy();
         const quit = async() => {
-            presTyped.destroy();
+            level !== 5 && presTyped.destroy();
             qTyped.destroy();
             setPresenterStatus(initPresenter);
             setGameStatus(initGame);
             setTrivia(initTrivia);
 
-            await fetch(
+            level > 1 && await fetch(
                 'http://localhost:4000/api/history',{
                     method: 'post',
                     headers:{
@@ -224,17 +246,38 @@ const GameScreen = () => {
             })
         }
 
-        presTyped = new Typed(presenterElement.current,  {
-            strings: ['Has sido un concursante genial.','Hasta pronto!! ^2000'],
+        const strings = [
+            [   'Espera reviso mis datos... ^2000',
+                'Lo siento mucho, te has equivocado', 
+                'Has sido un concursante genial',
+                'Hasta pronto!!! ^2000'
+            ],
+            [
+                'Has sido un concursante genial.',
+                'Hasta pronto!! ^2000'
+            ]
+        ]
+
+      presTyped = level === 5? 'undefined' : new Typed(presenterElement.current,  {
+            strings: mistake ? strings[0]: strings[1],
             startDelay: 700,
             typeSpeed: 60,
             backSpeed: 40,
             backDelay: 100,
             showCursor: false,
+            preStringTyped: (arrayPos) => {
+                if( mistake && arrayPos === 0){
+                    misterySound.current.play();
+                }else if(arrayPos === 1){
+                    failSound.current.play();
+                }
+            },
             onComplete: () => {
                 quit();
             }
         })
+
+        level === 5 && quit()
     }
 
     return (
@@ -269,7 +312,7 @@ const GameScreen = () => {
                             affirmText="Continúo"
                             denyText="Me retiro"
                             onClickProceed={ handleContinue }
-                            onClickDeny={ handleQuit }
+                            onClickDeny={() => handleQuit(false) }
                         />
                     )
                 }
@@ -329,6 +372,7 @@ const GameScreen = () => {
             </div>
             <audio ref={ misterySound } src="https://res.cloudinary.com/dvexbstyt/video/upload/v1641431960/redoblante_oes8r5.mp3"></audio>
             <audio ref={ congratsSound } src="https://res.cloudinary.com/dvexbstyt/video/upload/v1641432416/aplauso_afpwwx.mp3"></audio>
+            <audio ref={ failSound } src="https://res.cloudinary.com/dvexbstyt/video/upload/v1641483459/fail-trombone-01_aelihv.mp3"></audio>
 
         </div>
     )
