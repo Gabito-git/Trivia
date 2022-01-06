@@ -1,30 +1,14 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import Swal from 'sweetalert2';
+
 import Typed from "typed.js";
 
-import presenter from '../assets/presenter.png';
+import host from '../assets/presenter.png';
 import Confirm from '../components/Confirm';
 import { GameContext } from '../context/gameContext';
-
-const initTrivia = {
-    question: '',
-    answers:[],
-    correctAnswer: null,
-    level: 1
-}
-
-const initGame ={
-    score: 0, 
-    level: 1,
-    isQuestionOnScreen: false,
-    questionSelected: null,
-    answersLocked: false,
-    winner: null
-}
-
-const initPresenter ={
-    finishSpeak: false,
-}
+import { initGame, initPresenter, initTrivia } from '../data/initStates';
+import { byeStrings, newQuestionStrings, yesStrings } from '../data/strings';
+import typedOptions from '../helpers/customTyped';
+import { getTrivia } from '../helpers/getTrivia';
 
 let presTyped;
 let qTyped;
@@ -33,10 +17,10 @@ const GameScreen = () => {
 
     const [trivia, setTrivia] = useState( initTrivia );
     const [gameStatus, setGameStatus] = useState( initGame );
-    const [presenterStatus, setPresenterStatus] = useState(initPresenter);
+    const [hostStatus, setHostStatus] = useState(initPresenter);
     const { state, dispatch } = useContext(GameContext);
 
-    const { finishSpeak } = presenterStatus;
+    const { finishSpeak } = hostStatus;
 
     const { 
         isQuestionOnScreen, 
@@ -46,79 +30,46 @@ const GameScreen = () => {
         winner,
         answersLocked } = gameStatus;
 
-    const presenterElement = useRef(null);
+    const hostElement = useRef(null);
     const questionElement  = useRef(null);
     const misterySound     = useRef(null);
     const congratsSound    = useRef(null);
     const failSound        = useRef(null);
 
     useEffect(() => {
-        const getTrivia = async() => {
-            const response = await fetch(
-                `http://localhost:4000/api/trivias/${ level }`,
-                {
-                    method: 'get',
-                    headers:{
-                        'Content-Type': 'application/json'
-                    },
-                }
-            )
-
-            const data = await response.json();
-            if(!data.ok){
-                return Swal.fire(
-                    'Oops...', data.message, 'error'
-                )
-            }
-
-            setTrivia( data.trivia )
-        }
-
-        getTrivia()
+        getTrivia(level, setTrivia)
     }, [ level ])
 
     useEffect(() => {
-        const strings = {
-            1: [`Hola ${ state.nickname }.`,'Bienvenid@ a Trivia Millonaria', 'Vamos por $100.000'],
-            2: ['Alista tu intelecto!!!', 'Vamos por $1.000.000'],
-            3: ['Nada te detiene!!', 'Vamos por $5.000.000'],
-            4: ['Estoy sin palabras.', 'Vamos por $25.000.000'],
-            5: ['A hacer historia se dijo.', 'PREMIO MAYOR. Vamos por $100.000.000']
-        }
-        presTyped = new Typed(presenterElement.current, {
-            strings: strings[level],
-            startDelay: 300,
-            typeSpeed: 60,
-            backSpeed: 40,
-            backDelay: 500,
-            showCursor: false,
-            onComplete: () => { 
-                setPresenterStatus( p => ({
-                    ...p,
-                    finishSpeak: true
-                }) )
-             }
-          });
-
-    }, [ level ])
-
-    useEffect(() => {
-
-        if(finishSpeak){
-            qTyped = new Typed( questionElement.current,{
-                strings: [ `${ trivia.question }` ],
-                startDelay: 700,
-                typeSpeed: 60,
-                backSpeed: 40,
-                backDelay: 100,
-                showCursor: false,
+        presTyped = new Typed(
+            hostElement.current, 
+            typedOptions({
+                strings: newQuestionStrings(state)[level],
                 onComplete: () => {
-                    setGameStatus( g => ({
-                        ...g,
-                        isQuestionOnScreen: true
+                    setHostStatus( p => ({
+                        ...p,
+                        finishSpeak:true
                     }))
                 }
-            } )
+            })
+        )
+
+    }, [ level ])
+
+    useEffect(() => {
+        if(finishSpeak){
+            qTyped = new Typed(
+                questionElement.current,
+                typedOptions({
+                    strings: [`${ trivia.question }`],
+                    onComplete: () => {
+                        setGameStatus( g => ({
+                            ...g,
+                            isQuestionOnScreen: true
+                        }))
+                    }
+                })
+            )
         }
         
     }, [finishSpeak])
@@ -140,55 +91,40 @@ const GameScreen = () => {
         })
 
         if( questionSelected === trivia.correctAnswer ){
-            const strings = [
-                [
-                    'Espera reviso mis datos... ^2000',
-                    'Felicitaciones!!!!',
-                    '¿Continúas o tomas tu dinero?'
-                ],
-                [
-                    'Espera reviso mis datos... ^2000',
-                    `Felicitaciones ${state.nickname}`,
-                    'Has llegado al final',
-                    'Hasta pronto ^1000'
-                ]
-            ]
             presTyped.destroy()
-            presTyped = new Typed( presenterElement.current, {
-                strings: level === 5 ? strings[1]: strings[0],
-                startDelay: 700,
-                typeSpeed: 60,
-                backSpeed: 40,
-                backDelay: 100,
-                showCursor: false,
-
-                preStringTyped: (arrayPos, self) => {
-                    const scoreCalc = {
-                        1: '100.000',
-                        2: '1.000.000',
-                        3: '5.000.000',
-                        4: '25.000.000',
-                        5: '100.000.000'
+            presTyped = new Typed(
+                hostElement.current,
+                typedOptions({
+                    strings: level === 5 ? yesStrings(state)[1]: yesStrings(state)[0],
+                    preStringTyped: (arrayPos, self) => {
+                        const scoreCalc = {
+                            1: '100.000',
+                            2: '1.000.000',
+                            3: '5.000.000',
+                            4: '25.000.000',
+                            5: '100.000.000'
+                        }
+                        if(arrayPos === 0){
+                            misterySound.current.play();
+                        }
+                        if(arrayPos === 1){
+                            congratsSound.current.play();
+                            setGameStatus({
+                                ...gameStatus,
+                                answersLocked: true,    
+                                winner: level !== 5? trivia.correctAnswer: null,
+                                score: scoreCalc[level]
+                            })
+                        }
+                    },
+                    onComplete: () => {
+                        if (level === 5){
+                            handleQuit()
+                        }
                     }
-                    if(arrayPos === 0){
-                        misterySound.current.play();
-                    }
-                    if(arrayPos === 1){
-                        congratsSound.current.play();
-                        setGameStatus({
-                            ...gameStatus,
-                            answersLocked: true,    
-                            winner: level !== 5? trivia.correctAnswer: null,
-                            score: scoreCalc[level]
-                        })
-                    }
-                },
-                onComplete: () => {
-                    if (level === 5){
-                        handleQuit()
-                    }
-                }
-            })
+                })
+            )
+          
         } else{
             presTyped.destroy();
             handleQuit(true);
@@ -214,8 +150,8 @@ const GameScreen = () => {
             winner: null
         })
 
-        setPresenterStatus({
-            ...presenterStatus,
+        setHostStatus({
+            ...hostStatus,
             finishSpeak: false
         })
     }
@@ -225,11 +161,11 @@ const GameScreen = () => {
         const quit = async() => {
             level !== 5 && presTyped.destroy();
             qTyped.destroy();
-            setPresenterStatus(initPresenter);
+            setHostStatus(initPresenter);
             setGameStatus(initGame);
             setTrivia(initTrivia);
 
-            level > 1 && await fetch(
+            (level > 1 || !mistake) && await fetch(
                 'http://localhost:4000/api/history',{
                     method: 'post',
                     headers:{
@@ -246,36 +182,22 @@ const GameScreen = () => {
             })
         }
 
-        const strings = [
-            [   'Espera reviso mis datos... ^2000',
-                'Lo siento mucho, te has equivocado', 
-                'Has sido un concursante genial',
-                'Hasta pronto!!! ^2000'
-            ],
-            [
-                'Has sido un concursante genial.',
-                'Hasta pronto!! ^2000'
-            ]
-        ]
-
-      presTyped = level === 5? 'undefined' : new Typed(presenterElement.current,  {
-            strings: mistake ? strings[0]: strings[1],
-            startDelay: 700,
-            typeSpeed: 60,
-            backSpeed: 40,
-            backDelay: 100,
-            showCursor: false,
-            preStringTyped: (arrayPos) => {
-                if( mistake && arrayPos === 0){
-                    misterySound.current.play();
-                }else if(arrayPos === 1){
-                    failSound.current.play();
+        presTyped = level === 5? 'undefined' : new Typed(
+            hostElement.current,
+            typedOptions({
+                strings: mistake ? byeStrings[0]: byeStrings[1], 
+                preStringTyped: (arrayPos) => {
+                    if( mistake && arrayPos === 0){
+                        misterySound.current.play();
+                    }else if(arrayPos === 1){
+                        failSound.current.play();
+                    }
+                },
+                onComplete: () => {
+                    quit();
                 }
-            },
-            onComplete: () => {
-                quit();
-            }
-        })
+            })
+        )
 
         level === 5 && quit()
     }
@@ -286,9 +208,9 @@ const GameScreen = () => {
             <div className="gamescreen__score">$ { score }</div>
 
             <div className="gamescreen__presenter-talk">
-                <p ref={presenterElement}></p>
+                <p ref={hostElement}></p>
                 <div className="gamescreen__presenter">
-                    <img src={ presenter } alt=""/>
+                    <img src={ host } alt=""/>
                 </div>
             </div>
 
@@ -326,7 +248,10 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className={`gamescreen__answer animate__animated ${ winner === 0? 'animate__zoomIn': ''}` }
+                    className={
+                        `gamescreen__answer animate__animated 
+                        ${ winner === 0? 'animate__zoomIn': ''}` 
+                    }
                     onClick={() =>handleAnswerSelected(0)}
                 >
                     { isQuestionOnScreen && <p>A. { trivia.answers[0] }</p>}
@@ -338,7 +263,10 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className={`gamescreen__answer animate__animated ${ winner === 1? 'animate__zoomIn': ''}` }
+                    className={
+                        `gamescreen__answer animate__animated 
+                        ${ winner === 1? 'animate__zoomIn': ''}` 
+                    }
                     onClick={() =>handleAnswerSelected(1)}
                 >
                 { isQuestionOnScreen && <p>B. { trivia.answers[1] }</p>}
@@ -352,7 +280,10 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className={`gamescreen__answer animate__animated ${ winner === 2? 'animate__zoomIn': ''}` }
+                    className={
+                        `gamescreen__answer animate__animated 
+                        ${ winner === 2? 'animate__zoomIn': ''}` 
+                    }
                     onClick={() =>handleAnswerSelected(2)}
                 >
                 { isQuestionOnScreen && <p>C. { trivia.answers[2] }</p>}
@@ -364,7 +295,10 @@ const GameScreen = () => {
                             ? 'purple'
                             : 'black'}
                     }
-                    className={`gamescreen__answer animate__animated ${ winner === 3? 'animate__zoomIn': ''}` }
+                    className={
+                        `gamescreen__answer animate__animated 
+                        ${ winner === 3? 'animate__zoomIn': ''}` 
+                    }
                     onClick={() =>handleAnswerSelected(3)}
                 >
                 { isQuestionOnScreen && <p>D. { trivia.answers[3] }</p>}
