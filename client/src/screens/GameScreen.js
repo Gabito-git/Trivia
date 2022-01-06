@@ -121,18 +121,29 @@ const GameScreen = () => {
         if( questionSelected === trivia.correctAnswer ){
             presTyped.destroy()
             presTyped = new Typed( presenterElement.current, {
-                strings: ['..................','Felicitaciones'],
+                strings: ['Dejame reviso mis datos.. ^2000','Felicitaciones!!!!', '¿Continuas o tomas tu dinero?'],
                 startDelay: 700,
                 typeSpeed: 60,
                 backSpeed: 40,
                 backDelay: 100,
                 showCursor: false,
-                onComplete: () => { setGameStatus({
-                    ...gameStatus,
-                    winner: trivia.correctAnswer,
-                    score: '100.000',
-                    questionSelected: null
-                }) }
+
+                preStringTyped: (arrayPos, self) => {
+                    if(arrayPos === 1){
+                        setGameStatus({
+                            ...gameStatus,
+                            winner: trivia.correctAnswer,
+                            score: '100.000'
+                        })
+                    }
+                },
+
+                // onComplete: () => { setGameStatus({
+                //     ...gameStatus,
+                //     winner: trivia.correctAnswer,
+                //     score: '100.000',
+                //     questionSelected: null
+                // }) }
             })
         }
     }
