@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { GameContext } from "../context/gameContext";
 
 const WelcomeScreen = () => {
 
     const [history, setHistory] = useState([]);
+    const [nickname, setNickname] = useState('');
+    const { dispatch } = useContext(GameContext);
 
     useEffect(() => {
         const getHistory = async() => {
@@ -19,6 +23,22 @@ const WelcomeScreen = () => {
 
         getHistory()
     }, [])
+
+    const handleStart = (e) => {
+        e.preventDefault();
+
+        if( !nickname.trim() ){
+            return Swal.fire(
+                'Oops.', 'Por favor ingresa un nickname', 'error'
+            )
+        }
+
+        dispatch({
+            type: 'ADD_NICKNAME',
+            payload: nickname
+        })
+
+    }
 
     return (
         <div className="welcomescreen">
@@ -41,11 +61,13 @@ const WelcomeScreen = () => {
                     <h1 className="welcomescreen__title">Trivia</h1>
                     <span className="welcomescreen__subtitle">Millonaria</span>
                 </div>
-                <form>
+                <form onSubmit={ handleStart }>
                     <div className="welcomescreen__input-div">
                         <input 
                             placeholder="ingresa tu apodo"
                             className="welcomescreen__input"
+                            value={ nickname }
+                            onChange={ (e) => setNickname(e.target.value) }
                         />
                     </div>
                     <div className="welcomescreen__button-div">
