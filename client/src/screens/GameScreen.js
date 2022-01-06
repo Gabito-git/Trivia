@@ -237,7 +237,7 @@ const GameScreen = () => {
                     },
                     body: JSON.stringify({
                         username: state.nickname,
-                        score: `$ ${score}`
+                        score: level !==5 ?`$ ${score}`: '$ 100.000.000'
                     })
                 }
             )
