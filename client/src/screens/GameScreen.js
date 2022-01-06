@@ -46,6 +46,8 @@ const GameScreen = () => {
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
+    const misterySound     = useRef(null);
+    const congratsSound    = useRef(null);
 
     useEffect(() => {
         const getTrivia = async() => {
@@ -152,7 +154,11 @@ const GameScreen = () => {
                         4: '25.000.000',
                         5: '100.000.000'
                     }
+                    if(arrayPos === 0){
+                        misterySound.current.play();
+                    }
                     if(arrayPos === 1){
+                        congratsSound.current.play();
                         setGameStatus({
                             ...gameStatus,
                             answersLocked: true,    
@@ -279,7 +285,9 @@ const GameScreen = () => {
                 { isQuestionOnScreen && <p>D. { trivia.answers[3] }</p>}
                 </div>
             </div>
-            
+            <audio ref={ misterySound } src="https://res.cloudinary.com/dvexbstyt/video/upload/v1641431960/redoblante_oes8r5.mp3"></audio>
+            <audio ref={ congratsSound } src="https://res.cloudinary.com/dvexbstyt/video/upload/v1641432416/aplauso_afpwwx.mp3"></audio>
+
         </div>
     )
 }
