@@ -16,6 +16,7 @@ const initGame ={
     level: 1,
     isQuestionOnScreen: false,
     questionSelected: null,
+    answersLocked: false,
     winner: null
 }
 
@@ -39,7 +40,8 @@ const GameScreen = () => {
         level, 
         questionSelected, 
         score, 
-        winner } = gameStatus;
+        winner,
+        answersLocked } = gameStatus;
 
     const presenterElement = useRef(null);
     const questionElement  = useRef(null);
@@ -109,7 +111,7 @@ const GameScreen = () => {
     }, [finishSpeak])
 
     const handleAnswerSelected = ( number) => {
-        if(isQuestionOnScreen){
+        if(isQuestionOnScreen && !answersLocked){
             setGameStatus({
                 ...gameStatus,
                 questionSelected: number
@@ -118,10 +120,16 @@ const GameScreen = () => {
     }
 
     const handleYesClick = () => {
+
+        setGameStatus({
+            ...gameStatus,
+            answersLocked: true
+        })
+
         if( questionSelected === trivia.correctAnswer ){
             presTyped.destroy()
             presTyped = new Typed( presenterElement.current, {
-                strings: ['Dejame reviso mis datos.. ^2000','Felicitaciones!!!!', '¿Continuas o tomas tu dinero?'],
+                strings: ['Dejame reviso mis datos... ^2000','Felicitaciones!!!!', '¿Continuas o tomas tu dinero?'],
                 startDelay: 700,
                 typeSpeed: 60,
                 backSpeed: 40,
@@ -132,6 +140,7 @@ const GameScreen = () => {
                     if(arrayPos === 1){
                         setGameStatus({
                             ...gameStatus,
+                            answersLocked: true,    
                             winner: trivia.correctAnswer,
                             score: '100.000'
                         })
@@ -163,7 +172,7 @@ const GameScreen = () => {
             <div className="gamescreen__question">
                 <p ref={ questionElement }></p>
                 {
-                    questionSelected !== null && (
+                    questionSelected !== null && !answersLocked && (
                         <div className='gamescreen__confirm animate__animated animate__fadeInUp'>
                             <h4>Estas seguro?</h4>
                             <button 
