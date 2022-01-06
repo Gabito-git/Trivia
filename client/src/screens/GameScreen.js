@@ -151,6 +151,13 @@ const GameScreen = () => {
         }
     }
 
+    const handleNoClick = () => {
+        setGameStatus({
+            ...gameStatus,
+            questionSelected: null
+        })
+    }
+
     return (
         <div className="gamescreen">
 
@@ -172,6 +179,7 @@ const GameScreen = () => {
                             affirmText="Si"
                             denyText="No"
                             onClickProceed={ handleYesClick }
+                            onClickDeny={ handleNoClick }
                         />
                     )
                 }
