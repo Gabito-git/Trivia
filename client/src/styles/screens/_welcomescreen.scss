@@ -1,7 +1,38 @@
 .welcomescreen{
 
     height: 100vh;
+    width: 100%;
     @include vertical-center;
+
+    display: flex;
+    flex-direction: column-reverse;
+    @media all and (min-width: 1023px){
+        flex-direction: row;
+    }
+
+    &__history{
+        width: 27rem;
+        background-color: white;
+        border-radius: 2rem;
+        border: 5px dotted purple;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        height: 15rem;
+        overflow-y: scroll;
+        text-align: center;
+
+        h2{
+            font-size: 1.6rem;
+        }
+
+        @media all and (min-width: 1023px){
+            height: 20rem;
+            margin-right: 8rem;
+            margin-top: -22rem;
+        }
+
+       
+    }
 
     &__banner{
         background-color: purple;
