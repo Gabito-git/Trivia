@@ -73,8 +73,15 @@ const GameScreen = () => {
     }, [ level ])
 
     useEffect(() => {
+        const strings = {
+            1: ['Bienvenido a Trivia Millonaria', 'Vamos por $100.000'],
+            2: ['Alista tu intelecto!!!', 'Vamos por $1.000.000'],
+            3: ['Nada te detiene!!', 'Vamos por $5.000.000'],
+            4: ['Estoy sin palabras.', 'Vamos por $25.000.000'],
+            5: ['A hacer historia se dijo.', 'PREMIO MAYOR. Vamos por $100.000.000']
+        }
         presTyped = new Typed(presenterElement.current, {
-            strings: level===1?['Bienvenido a Trivia Millonaria', 'Vamos por $100.000']:[], 
+            strings: strings[level],
             startDelay: 300,
             typeSpeed: 60,
             backSpeed: 40,
@@ -138,12 +145,19 @@ const GameScreen = () => {
                 showCursor: false,
 
                 preStringTyped: (arrayPos, self) => {
+                    const scoreCalc = {
+                        1: '100.000',
+                        2: '1.000.000',
+                        3: '5.000.000',
+                        4: '25.000.000',
+                        5: '100.000.000'
+                    }
                     if(arrayPos === 1){
                         setGameStatus({
                             ...gameStatus,
                             answersLocked: true,    
                             winner: trivia.correctAnswer,
-                            score: '100.000'
+                            score: scoreCalc[level]
                         })
                     }
                 },
@@ -155,6 +169,24 @@ const GameScreen = () => {
         setGameStatus({
             ...gameStatus,
             questionSelected: null
+        })
+    }
+
+    const handleContinue = () => {
+        presTyped.destroy();
+        qTyped.destroy();
+        setGameStatus({
+            ...gameStatus,
+            level: gameStatus.level +1,
+            isQuestionOnScreen: false,
+            questionSelected: null,
+            answersLocked: false,
+            winner: null
+        })
+
+        setPresenterStatus({
+            ...presenterStatus,
+            finishSpeak: false
         })
     }
 
@@ -185,11 +217,11 @@ const GameScreen = () => {
                 }
 
                 {
-                    questionSelected !== null && winner && (
+                    questionSelected !== null && winner !== null && (
                         <Confirm 
                             affirmText="Continúo"
                             denyText="Me retiro"
-                            onClickProceed={ handleYesClick }
+                            onClickProceed={ handleContinue }
                         />
                     )
                 }
