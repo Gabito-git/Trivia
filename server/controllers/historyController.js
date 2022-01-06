@@ -27,7 +27,7 @@ const addUserToHistory = async(req, res) => {
 const getHistory = async(req, res) => {
 
     try {
-        const history = await User.find();
+        const history = await User.find().sort({score: -1});
         res.status(200).json({
             ok: true,
             history
