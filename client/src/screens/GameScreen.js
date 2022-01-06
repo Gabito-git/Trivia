@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import Typed from "typed.js";
 
 import presenter from '../assets/presenter.png';
 import Confirm from '../components/Confirm';
+import { GameContext } from '../context/gameContext';
 
 const initTrivia = {
     question: '',
@@ -33,6 +34,7 @@ const GameScreen = () => {
     const [trivia, setTrivia] = useState( initTrivia );
     const [gameStatus, setGameStatus] = useState( initGame );
     const [presenterStatus, setPresenterStatus] = useState(initPresenter);
+    const { state, dispatch } = useContext(GameContext);
 
     const { finishSpeak } = presenterStatus;
 
@@ -76,7 +78,7 @@ const GameScreen = () => {
 
     useEffect(() => {
         const strings = {
-            1: ['Bienvenido a Trivia Millonaria', 'Vamos por $100.000'],
+            1: [`Hola ${ state.nickname }.`,'Bienvenid@ a Trivia Millonaria', 'Vamos por $100.000'],
             2: ['Alista tu intelecto!!!', 'Vamos por $1.000.000'],
             3: ['Nada te detiene!!', 'Vamos por $5.000.000'],
             4: ['Estoy sin palabras.', 'Vamos por $25.000.000'],
