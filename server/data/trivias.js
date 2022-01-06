@@ -139,7 +139,7 @@ const trivias = [
             "Oceano Atlántico",
             "Oceano Índico",
             "Oceano Glacial Ártico",
-            "Nicola Pacífico"
+            "Oceano Pacífico"
         ],
         correctAnswer:3,
         level:3
