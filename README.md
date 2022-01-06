@@ -20,7 +20,14 @@ npm install
 cd client
 npm install
 ``` 
-3. Ejecútalo
+
+3. Alimentar la base de datos con las preguntas pre establecidas:
+
+```
+npm run data:import
+```
+
+4. Ejecútalo
 
 ```
 # Run frontend (:3000) & backend (:4000)
@@ -28,4 +35,9 @@ npm run dev
 
 # Run backend only
 npm run server
+```
+
+- NotaL: Para destruir la data existente en la base de datos
+```
+npm run data:destroy
 ```
