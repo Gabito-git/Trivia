@@ -12,6 +12,12 @@ const reducer = (state, action) => {
                 nickname: action.payload
             }
     
+        case 'UNSET_NICKNAME':
+            return{
+                ...state,
+                nickname: null
+            }
+    
         default:
             return state;
     }
