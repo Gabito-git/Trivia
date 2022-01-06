@@ -1,7 +1,7 @@
 import {createContext, useReducer} from 'react';
 
 const initState = {
-    nickname = null
+    nickname: null
 }
 
 const reducer = (state, action) => {
