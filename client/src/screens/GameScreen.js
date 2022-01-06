@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import Typed from "typed.js";
 
 import presenter from '../assets/presenter.png';
+import Confirm from '../components/Confirm';
 
 const initTrivia = {
     question: '',
@@ -173,14 +174,12 @@ const GameScreen = () => {
                 <p ref={ questionElement }></p>
                 {
                     questionSelected !== null && !answersLocked && (
-                        <div className='gamescreen__confirm animate__animated animate__fadeInUp'>
-                            <h4>Estas seguro?</h4>
-                            <button 
-                                className='gamescreen__button gamescreen__button-si'
-                                onClick={ handleYesClick }
-                            >Si</button>
-                            <button className= 'gamescreen__button gamescreen__button-no'>No</button>
-                        </div>
+                        <Confirm 
+                            title="¿Estas seguro?"
+                            affirmText="Si"
+                            denyText="No"
+                            onClickProceed={ handleYesClick }
+                        />
                     )
                 }
                 
